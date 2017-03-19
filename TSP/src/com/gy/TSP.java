@@ -39,7 +39,8 @@ public class TSP {
 
 	}// end constructor
 
-	private double getDistance(City a, City b) {// 计算两个城市之间的距离，单位为km
+	private double getDistance(City a, City b) {// compute the distance between
+												// city a and city b
 		double distance = 0;
 		double longtitude1 = a.getX();
 		double latitude1 = a.getY();
@@ -74,7 +75,7 @@ public class TSP {
 
 	public void search() {// solve the TSP problem
 
-		double len1 = total_distance(path);
+		double len1 = 0;
 		double t_temprature = temprature * N;
 		City[] temp_cities = new City[N];
 		Random random = new Random();
@@ -84,14 +85,16 @@ public class TSP {
 		while (t_temprature > e) {
 
 			for (int i = 0; i < iter; i++) {
+				len1 = total_distance(path);
 				temp_cities = this.change();
 				double len2 = this.total_distance(temp_cities);
 				double delta_e = len2 - len1;
-				if (delta_e < 0) {// 新路线更好,替代旧的路线
-					this.setCities(temp_cities.clone());
-				} else {// 新的路线更差，则以一定的概率接受结果
+				if (delta_e < 0) {// the new route is better,replace with the
+									// old one
+					this.setPath(temp_cities.clone());
+				} else {// if the new route is worse,accept it in a probability
 					if (Math.exp(-delta_e / t_temprature) > random.nextDouble()) {
-						this.setCities(temp_cities.clone());
+						this.setPath(temp_cities.clone());
 					}
 				}
 			} // end for
@@ -113,10 +116,10 @@ public class TSP {
 			p2 = (int) Math.floor(N * random.nextDouble());
 		} while (p1 == p2);// 获得两个不相同的随机数
 		// 交换p1,p2两个城市
-		temp = cities[p1];
-		cities[p1] = cities[p2];
-		cities[p2] = temp;
-		return this.cities;
+		temp = path[p1];
+		path[p1] = path[p2];
+		path[p2] = temp;
+		return this.path;
 	}
 
 	private void print() {
