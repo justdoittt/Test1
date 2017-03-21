@@ -17,6 +17,7 @@ public class AccordionTest extends PApplet {
 	}
 
 	public void setup() {
+		surface.setResizable(true);
 		noStroke();//	Disables drawing the stroke  
 		smooth();
 		gui();

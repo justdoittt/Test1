@@ -1,5 +1,6 @@
 package com.gy;
 
+import controlP5.Accordion;
 import controlP5.ControlP5;
 import controlP5.Group;
 import processing.core.PApplet;
@@ -7,6 +8,7 @@ import processing.core.PApplet;
 public class TSPGUI extends PApplet {
 
 	ControlP5 cp5;
+	Accordion accordion;
 	int c = color(0, 160, 100);
 
 	public void settings() {
@@ -25,6 +27,7 @@ public class TSPGUI extends PApplet {
 		cp5 = new ControlP5(this);
 		cp5.addBang("change").setPosition(10, 20).setSize(100, 100).moveTo(g1);
 		;
+		accordion = cp5.addAccordion("acc").setPosition(40, 40).setWidth(200).addItem(g1);
 
 	}
 
