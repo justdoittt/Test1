@@ -11,60 +11,53 @@ public class BangTest extends PApplet {
 	Random random = new Random();
 	int myColorBackground = 250;
 
-	int [] col =  {100,150,200,250
-	};
+	int[] col = { 100, 150, 200, 250 };
 
-	public void settings(){
-		size(400, 600);
-		
+	public void settings() {
+		size(400, 600);// must be the first line of setUp()
+
 	}
+
 	public void setup() {
-	  noStroke();
-	  cp5 = new ControlP5(this);
-	  for (int i=0;i<col.length;i++) {
-	    cp5.addBang("bang"+i)
-	       .setPosition(40+i*80, 200)
-	       .setSize(40, 40)
-	       .setId(i)
-	       ;
-	  }
-	  
-	  // change the trigger event, by default it is PRESSED.
-	  cp5.addBang("bang")
-	     .setPosition(40, 300)
-	     .setSize(280, 40)
-	     .setTriggerEvent(Bang.RELEASE)//the event is triggered when the bang is released
-	     .setLabel("changeBackground")
-	     ;
-	           
+		surface.setResizable(true);
+		noStroke();
+		cp5 = new ControlP5(this);
+		for (int i = 0; i < col.length; i++) {
+			cp5.addBang("bang" + i).setPosition(40 + i * 80, 200).setSize(40, 40).setId(i);
+		}
+
+		// change the trigger event, by default it is PRESSED.
+		// the event is triggered when the bang is released
+		cp5.addBang("bang").setPosition(40, 300).setSize(280, 40).setTriggerEvent(Bang.RELEASE)
+				.setLabel("changeBackground");
+
 	}
 
 	public void draw() {
-	  background(myColorBackground);
-	  for (int i=0;i<col.length;i++) {
-	    fill(col[i]);
-	    rect(40+i*80, 50, 40, 80);
-	  }
+		background(myColorBackground);
+		for (int i = 0; i < col.length; i++) {
+			fill(col[i]);
+			rect(40 + i * 80, 50, 40, 80);
+		}
 	}
 
-
 	public void bang() {
-	  int theColor = (int)(random.nextDouble()*255);
-	  myColorBackground = color(theColor);
+		int theColor = (int) (random.nextDouble() * 255);
+		myColorBackground = color(theColor);
 	}
 
 	public void controlEvent(ControlEvent theEvent) {
-	  for (int i=0;i<col.length;i++) {
-	    if (theEvent.getController().getName().equals("bang"+i)) {
-	      col[i] = (int)(random.nextDouble()*255);
-	    }
-	  }
-	  
+		for (int i = 0; i < col.length; i++) {
+			if (theEvent.getController().getName().equals("bang" + i)) {
+				col[i] = (int) (random.nextDouble() * 255);
+			}
+		}
+
 	}
 
 	public static void main(String[] args) {
 
-		PApplet.main(new String[] { BangTest.class.getName() });
+		PApplet.main(new String[] { BangTest2.class.getName() });
 	}
 
 }
