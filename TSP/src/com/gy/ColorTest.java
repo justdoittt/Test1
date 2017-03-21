@@ -13,7 +13,7 @@ public class ColorTest extends PApplet {
 
 	float n, n1;
 
-	public void setttings() {
+	public void settings() {
 		size(400,600);
 	}
 
