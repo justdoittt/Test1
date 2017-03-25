@@ -2,7 +2,7 @@ package com.gy;
 
 import java.text.DecimalFormat;
 
-public class Point {
+public class Point implements Cloneable {
 
 	private float x;
 	private float y;
@@ -51,8 +51,18 @@ public class Point {
 
 	}
 
-	protected Point clone() throws CloneNotSupportedException {
-		return (Point) super.clone();
+	protected Point clone() {
+
+		Point clone = null;
+
+		try {
+			clone = (Point) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return clone;
 	}
 
 }
