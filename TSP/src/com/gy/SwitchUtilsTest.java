@@ -13,6 +13,9 @@ public class SwitchUtilsTest {
 			testList.add(new Point(i + c, i + c, i));
 
 		}
+		for (Point p : testList) {
+			System.out.println(p);
+		}
 		SwitchUtils.exchange(testList, 0, 4);
 		SwitchUtils.exchange(testList, 1, 2);
 		for (Point p : testList) {

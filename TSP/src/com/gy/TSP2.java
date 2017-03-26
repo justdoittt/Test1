@@ -13,7 +13,7 @@ public class TSP2 {
 	public int num;
 	public List<Point> points;
 	public static final double temprature = 100;
-	public static final double delta = 0.98;
+	public static final double delta = 0.99;
 	public static final int iter = 100;
 	public List<Point> path;
 	public double totalDistance;
@@ -31,6 +31,36 @@ public class TSP2 {
 		generatePoints();
 	}
 
+	public List<Point> search() {// solve the TSP problem
+		flag = false;
+		Random random = new Random();
+		double len1 = 0;
+		double t_temprature = temprature * this.num;
+		List<Point> temp = new ArrayList<Point>(points.size());
+		for (int i = 0; i < temp.size(); i++) {
+			temp.set(i, null);
+		}
+		while (t_temprature > e) {
+			for (int i = 0; i < iter; i++) {
+				len1 = total_distance(this.path);
+				temp = change(CopyUtils2.deepCopy(this.path));
+				double len2 = this.total_distance(temp);
+				double delta_e = len2 - len1;
+				if (delta_e < 0) {// the new route is better,replace with the
+									// old one
+					this.setPath(CopyUtils2.deepCopy(temp));
+				} else {// if the new route is worse,accept it in a probability
+					if (Math.exp(-delta_e / t_temprature) > random.nextDouble()) {
+						this.setPath(CopyUtils2.deepCopy(temp));
+					}
+				}
+			} // end for
+			t_temprature = t_temprature * delta;
+		} // end while
+		this.setTotalDistance(this.total_distance(path));
+		return this.path;// path is the optimal result
+	}// end search()
+
 	public void generatePoints() {// generate N points;
 
 		File dataFile = new File("D:\\软件\\Github\\Test1\\TSP\\src\\com\\gy\\data");
@@ -44,8 +74,8 @@ public class TSP2 {
 		Random random = new Random();
 		float x = 0, y = 0;
 		for (int i = 0; i < this.num; i++) {
-			x = random.nextFloat() * 700;
-			y = random.nextFloat() * 700;
+			x = random.nextFloat() * 800 + 100;
+			y = random.nextFloat() * 800 + 100;
 			Point p = new Point(x, y, i);
 			this.points.add(p);
 		}
@@ -83,8 +113,8 @@ public class TSP2 {
 				e1.printStackTrace();
 			}
 			for (int i = 0; i < N; i++) {
-				float x = random.nextFloat() * 700;
-				float y = random.nextFloat() * 700;
+				float x = random.nextFloat() * 800 + 100;
+				float y = random.nextFloat() * 800 + 100;
 				point = new Point(x, y, points.size() + i - 1);
 				points.add(point);
 				try {
@@ -106,39 +136,6 @@ public class TSP2 {
 		}
 	}
 
-	public void search() {// solve the TSP problem
-		flag = false;
-		Random random = new Random();
-		double len1 = 0;
-		double t_temprature = temprature * points.size();
-		List<Point> temp = new ArrayList<Point>(points.size());
-		for (int i = 0; i < temp.size(); i++) {
-			temp.set(i, null);
-		}
-		while (t_temprature > e) {
-
-			for (int i = 0; i < iter; i++) {
-				len1 = total_distance(this.path);
-				temp = this.change();
-				double len2 = this.total_distance(temp);
-				double delta_e = len2 - len1;
-				if (delta_e < 0) {// the new route is better,replace with the
-									// old one
-					this.setPath(CopyUtils2.deepCopy(temp));
-				} else {// if the new route is worse,accept it in a probability
-					if (Math.exp(-delta_e / t_temprature) > random.nextDouble()) {
-						this.setPath(CopyUtils2.deepCopy(temp));
-					}
-				}
-			} // end for
-			len1 = this.total_distance(path);
-			t_temprature = t_temprature * delta;
-		} // end while
-		this.setPath(CopyUtils2.deepCopy(temp));
-		float total = this.total_distance(this.path);
-		this.setTotalDistance(total);
-	}// end search()
-
 	public void clear() {
 		points.clear();
 		path.clear();
@@ -147,16 +144,17 @@ public class TSP2 {
 		flag = true;
 	}
 
-	private List<Point> change() {// 随机交换两个城市的路线
+	public List<Point> change(List<Point> origin) {// 随机交换两个城市的路线
 		Random random = new Random();
 		int p1 = 0, p2 = 0;
+		int length = path.size();
 		do {
-			p1 = (int) Math.floor(num * random.nextDouble());
-			p2 = (int) Math.floor(num * random.nextDouble());
-		} while (p1 == p2);// 获得两个不相同的随机数
+			p1 = random.nextInt(length);
+			p1 = random.nextInt(length);
+		} while (p1 == p2);
 		// 交换p1,p2两个城市
-		SwitchUtils.exchange(path, p1, p2);
-		return this.path;
+		SwitchUtils.exchange(origin, p1, p2);
+		return origin;
 
 	}
 
@@ -172,7 +170,8 @@ public class TSP2 {
 	}
 
 	public double getTotalDistance() {
-		return totalDistance;
+		DecimalFormat df = new DecimalFormat("#.00");
+		return Double.parseDouble(df.format(totalDistance));
 	}
 
 	public void setTotalDistance(double distance) {
@@ -204,6 +203,14 @@ public class TSP2 {
 		return d;
 	}
 
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
 	private float total_distance(List<Point> pointList) {
 
 		float total = 0;
@@ -213,4 +220,12 @@ public class TSP2 {
 		total += getDistance(pointList, pointList.size() - 1, 0);
 		return total;
 	}// end total_distance
+
+	public Point[] nextGeneration() {
+		Point[] temp = new Point[path.size()];
+		for (int i = 0; i < temp.length; i++) {
+			temp[i] = path.get(i).clone();
+		}
+		return temp;
+	}
 }
